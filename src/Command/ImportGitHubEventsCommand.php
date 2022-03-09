@@ -9,10 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * This command must import github events.
+ * This command must import GitHub events.
  * You can add the parameters and code you want in this command to meet the need.
  */
-class ImportGithubEventsCommand extends Command
+class ImportGitHubEventsCommand extends Command
 {
     protected static $defaultName = 'app:import-github-events';
 
