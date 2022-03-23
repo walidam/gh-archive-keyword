@@ -3,8 +3,9 @@
 namespace App\Infrastructure\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="OrmWriteActorRepository")
  * @ORM\Table(name="actor")
  */
 class Actor
@@ -69,5 +70,4 @@ class Actor
             $data['avatar_url']
         );
     }
-
 }

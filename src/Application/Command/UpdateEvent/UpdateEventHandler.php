@@ -25,7 +25,7 @@ class UpdateEventHandler implements CommandHandlerInterface
      */
     public function __invoke(UpdateEventCommand $command): void
     {
-        if($this->readEventRepository->exist($command->eventId) === false) {
+        if ($this->readEventRepository->exist($command->eventId) === false) {
             throw new NotFoundEntityException(sprintf('Event identified by %d not found !', $command->eventId));
         }
 
@@ -36,4 +36,3 @@ class UpdateEventHandler implements CommandHandlerInterface
         }
     }
 }
-

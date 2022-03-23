@@ -8,41 +8,41 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 abstract class AbstractRequest implements RequestInterface
 {
-    private Request $_originalRequest;
-    private array $_requestAndQueryParameters;
-    private NameConverterInterface $_caseConverter;
-    private PropertyAccessorInterface $_propertyAccessor;
+    private Request $originalRequest;
+    private array $requestAndQueryParameters;
+    private NameConverterInterface $caseConverter;
+    private PropertyAccessorInterface $propertyAccessor;
 
-    public function setOriginalRequest(Request $request): self
+    public function setOriginalRequest(Request $request): RequestInterface
     {
-        $this->_originalRequest = $request;
+        $this->originalRequest = $request;
 
         return $this;
     }
 
     public function getOriginalRequest(): Request
     {
-        return $this->_originalRequest;
+        return $this->originalRequest;
     }
 
     public function setCaseConverter(NameConverterInterface $caseConverter)
     {
-        $this->_caseConverter = $caseConverter;
+        $this->caseConverter = $caseConverter;
     }
 
     public function setPropertyAccessor(PropertyAccessorInterface $propertyAccessor)
     {
-        $this->_propertyAccessor = $propertyAccessor;
+        $this->propertyAccessor = $propertyAccessor;
     }
 
     public function setRequestAndQueryParameters(array $requestAndQueryParameters)
     {
-        $this->_requestAndQueryParameters = $requestAndQueryParameters;
+        $this->requestAndQueryParameters = $requestAndQueryParameters;
     }
 
     public function getParameters(): array
     {
-        return $this->computeParameters($this, $this->_requestAndQueryParameters);
+        return $this->computeParameters($this, $this->requestAndQueryParameters);
     }
 
     /**
@@ -51,7 +51,7 @@ abstract class AbstractRequest implements RequestInterface
     public function __debugInfo(): ?array
     {
         $result = get_object_vars($this);
-        unset($result['_originalRequest'], $result['_securityContext']);
+        unset($result['originalRequest'], $result['_securityContext']);
 
         return $result;
     }
@@ -62,14 +62,14 @@ abstract class AbstractRequest implements RequestInterface
 
         $parameters = [];
         foreach ($classProperties as $property) {
-            $normalizedPropertyName = $this->_caseConverter->normalize($property->getName());
-            $value = $this->_propertyAccessor->getValue($class, $normalizedPropertyName);
+            $normalizedPropertyName = $this->caseConverter->normalize($property->getName());
+            $value = $this->propertyAccessor->getValue($class, $normalizedPropertyName);
 
             if (!array_key_exists($normalizedPropertyName, $requestAndQueryParameters) && $value === null) {
                 continue;
             }
 
-            $value = $this->_propertyAccessor->getValue($class, $normalizedPropertyName);
+            $value = $this->propertyAccessor->getValue($class, $normalizedPropertyName);
 
             $parameters[$normalizedPropertyName] = $this->computeParameters(
                 $value,

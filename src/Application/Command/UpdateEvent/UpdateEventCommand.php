@@ -15,4 +15,3 @@ class UpdateEventCommand implements CommandInterface
         $this->comment = $comment;
     }
 }
-

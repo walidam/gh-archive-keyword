@@ -9,6 +9,10 @@ class UpdateEventRequest extends AbstractRequest
     /**
      * @Assert\NotBlank()
      * @Assert\NotNull()
+     * @Assert\Length(
+     *     min = 20,
+     *     maxMessage = "This value is too short. It should have 20 characters or more."
+     * )
      */
     private ?string $comment = null;
 
@@ -22,4 +26,3 @@ class UpdateEventRequest extends AbstractRequest
         $this->comment = $comment;
     }
 }
-

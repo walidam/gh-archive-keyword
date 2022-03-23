@@ -50,15 +50,22 @@ class Event
     /**
      * @ORM\Column(type="datetime_immutable", nullable=false)
      */
-    private \DateTimeImmutable $createAt;
+    private \DateTimeInterface $createAt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private ?string $comment;
 
-    public function __construct(int $id, string $type, Actor $actor, Repo $repo, array $payload, \DateTimeImmutable $createAt, ?string $comment)
-    {
+    public function __construct(
+        int $id,
+        string $type,
+        Actor $actor,
+        Repo $repo,
+        array $payload,
+        \DateTimeInterface $createAt,
+        ?string $comment
+    ) {
         $this->id = $id;
         EventType::assertValidChoice($type);
         $this->type = $type;
@@ -98,7 +105,7 @@ class Event
         return $this->payload;
     }
 
-    public function createAt(): \DateTimeImmutable
+    public function createAt(): \DateTimeInterface
     {
         return $this->createAt;
     }

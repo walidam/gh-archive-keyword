@@ -2,9 +2,8 @@
 
 namespace App\Domain\Repository;
 
-use App\Domain\Dto\EventInput;
-
 interface IWriteEventRepository
 {
+    public function create(array $data): void;
     public function update(string $comment, int $id): void;
 }

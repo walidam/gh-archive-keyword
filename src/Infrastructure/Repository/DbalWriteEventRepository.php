@@ -15,6 +15,28 @@ class DbalWriteEventRepository implements IWriteEvent
         $this->connection = $connection;
     }
 
+    public function create(array $data): void
+    {
+        $sql = <<<SQL
+        INSERT INTO event (id, actor_id, repo_id, type, "count", payload, create_at, comment)
+        VALUES (:id, :actor, :repo, :typeEvent, :total, :payload, :createAt, :comment)
+SQL;
+
+        $this->connection->executeQuery(
+            $sql,
+            [
+                'id' => $data['id'],
+                'actor' => $data['actor'],
+                'repo' => $data['repo'],
+                'typeEvent' => $data['type'],
+                'total' => $data['total'],
+                'payload' => $data['payload'],
+                'createAt' => $data['created_at'],
+                'comment' => $data['comment']
+            ]
+        );
+    }
+
     public function update(EventInput $authorInput, int $id): void
     {
         $sql = <<<SQL

@@ -12,4 +12,3 @@ interface IReadEvent
     public function getLatest(SearchInput $searchInput): array;
     public function exist(int $id): bool;
 }
-

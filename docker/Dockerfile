@@ -29,6 +29,16 @@ RUN apk add --no-cache make
 RUN apk add --no-cache postgresql-dev bash \
     && docker-php-ext-install -j$(nproc) pdo_pgsql
 
+RUN apk add --no-cache $PHPIZE_DEPS \
+    && pecl install xdebug-3.1.3 \
+    && docker-php-ext-enable xdebug
+
+RUN apk add --no-cache $PHPIZE_DEPS \
+    && docker-php-ext-enable xdebug \
+    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_port = 9000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.idekey = phpstorm" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 USER docker:docker
 
 EXPOSE 8000

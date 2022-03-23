@@ -1,0 +1,19 @@
+{
+    "source": {
+        "directories": [
+            "src"
+        ],
+        "excludes": [
+            "Application",
+            "Infrastructure",
+            "Kernel.php"
+        ]
+    },
+    "logs": {
+        "text": "infection.log"
+    },
+    "mutators": {
+        "@default": true,
+        "PublicVisibility": false
+    }
+}

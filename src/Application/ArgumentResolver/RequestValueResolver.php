@@ -76,8 +76,7 @@ class RequestValueResolver implements ArgumentValueResolverInterface
 
         // Check asserts.
         if ($violations->count()) {
-            throw new BadRequestHttpException((string) $violations);
+            throw new BadRequestHttpException((string) $violations->get(0)->getMessage());
         }
     }
 }
-

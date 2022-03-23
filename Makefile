@@ -102,11 +102,23 @@ db-test: var/docker.build
 .PHONY: unit-test
 unit-test: vendor ## Run PhpUnit unit testsuite
 	@$(call log,Running ...)
-	@$(PHP_RUN) bin/phpunit -v --testsuite unit --testdox
+	@$(PHP_RUN) bin/phpunit -d xdebug.mode=coverage -v --testsuite unit --testdox --coverage-text --coverage-html=reports/phpunit/coverage/html --colors=always --coverage-xml=reports/phpunit/coverage/xml --log-junit=reports/phpunit/coverage/junit/junit.xml
 	@$(call log_success,Done)
 
 .PHONY: func-test
 func-test: var/docker.up ## Run PhpUnit functionnal testsuite
 	@$(call log,Running ...)
 	$(PHP_EXEC) bin/phpunit -v --testsuite func --testdox
+	@$(call log_success,Done)
+
+.PHONY: phpcs
+phpcs: var/docker.up ## Run PhpCs analysis
+	@$(call log,Running ...)
+	$(PHP_EXEC) vendor/bin/phpcs --extensions=php src/
+	@$(call log_success,Done)
+
+.PHONY: infection
+infection: var/docker.up ## Run infection analysis
+	@$(call log,Running ...)
+	$(PHP_EXEC) vendor/bin/infection -s --threads=4 --skip-initial-tests --verbose --debug --log-verbosity=none --coverage=reports/phpunit/coverage --min-covered-msi=50
 	@$(call log_success,Done)

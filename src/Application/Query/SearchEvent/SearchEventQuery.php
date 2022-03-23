@@ -6,11 +6,11 @@ use App\Application\Bus\Query\QueryInterface;
 
 class SearchEventQuery implements QueryInterface
 {
-    public ?\DateTimeImmutable $date;
+    public ?\DateTimeInterface $date;
 
     public ?string $keyword;
 
-    public function __construct(?\DateTimeImmutable $date = null, ?string $keyword = null)
+    public function __construct(?\DateTimeInterface $date = null, ?string $keyword = null)
     {
         $this->date = $date;
         $this->keyword = $keyword;

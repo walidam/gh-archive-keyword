@@ -6,6 +6,7 @@
 /public/bundles/
 /var/
 /vendor/
+/reports/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
@@ -22,5 +23,4 @@
 
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
-/phpcs.xml
 ###< squizlabs/php_codesniffer ###

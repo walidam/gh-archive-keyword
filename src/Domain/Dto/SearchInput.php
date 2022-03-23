@@ -4,22 +4,22 @@ namespace App\Domain\Dto;
 
 class SearchInput
 {
-    private ?\DateTimeImmutable $date;
+    private ?\DateTimeInterface $date;
 
     private ?string $keyword;
 
-    public function __construct(?\DateTimeImmutable $date = null, ?string $keyword = null)
+    public function __construct(?\DateTimeInterface $date = null, ?string $keyword = null)
     {
         $this->date = $date;
         $this->keyword = $keyword;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeImmutable $date): void
+    public function setDate(\DateTimeInterface $date): void
     {
         $this->date = $date;
     }

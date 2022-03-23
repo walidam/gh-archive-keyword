@@ -14,13 +14,13 @@ class ReadEventRepository implements IReadEventRepository
         $this->readEvent = $readEvent;
     }
 
-    public function search(?\DateTimeImmutable $date = null, ?string $keyword = null): array
+    public function search(?\DateTimeInterface $date = null, ?string $keyword = null): array
     {
         $searchInput = new SearchInput($date, $keyword);
         $countByType = $this->readEvent->countByType($searchInput);
 
         $latest = $this->readEvent->getLatest($searchInput);
-        $latest = array_map(static function($item) {
+        $latest = array_map(static function ($item) {
             $item['repo'] = json_decode($item['repo'], true);
 
             return $item;
@@ -44,9 +44,9 @@ class ReadEventRepository implements IReadEventRepository
         return [
             'meta' => [
                 'totalEvents' => $this->readEvent->countAll($searchInput),
-                'totalPullRequests' => $countByType['pullRequest'] ?? 0,
-                'totalCommits' => $countByType['commit'] ?? 0,
-                'totalComments' => $countByType['comment'] ?? 0,
+                'totalPullRequests' => $countByType[EventType::PULL_REQUEST] ?? 0,
+                'totalCommits' => $countByType[EventType::COMMIT] ?? 0,
+                'totalComments' => $countByType[EventType::COMMENT] ?? 0,
             ],
             'data' => [
                 'events' => $latest,

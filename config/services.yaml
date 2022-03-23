@@ -25,6 +25,11 @@ services:
         resource: '../src/Application/Controller/'
         tags: [ 'controller.service_arguments' ]
 
+    # Register EventListeners
+    App\Application\EventListener\RequestListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
     App\Infrastructure\Entity\EventType: ~
 
     _instanceof:
