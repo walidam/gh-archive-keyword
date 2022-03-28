@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.7'
 services:
   php:
     user: ${FIXUID:-1000}:${FIXGID:-1000}
@@ -22,6 +22,11 @@ services:
       POSTGRES_DB: gh-archive-keyword
     ports:
       - "8001:5432"
+
+  wiremock:
+    image: wiremock/wiremock:2.32.0
+    ports:
+      - "8086:8080"
 
   adminer:
     image: adminer:4.7

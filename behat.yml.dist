@@ -1,0 +1,9 @@
+default:
+  extensions:
+    FriendsOfBehat\SymfonyExtension: ~
+  suites:
+    system:
+      paths:
+        - 'tests/Behat/features'
+      contexts:
+        - App\Tests\Behat\SystemContext

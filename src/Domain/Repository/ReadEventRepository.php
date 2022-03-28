@@ -19,12 +19,11 @@ class ReadEventRepository implements IReadEventRepository
         $searchInput = new SearchInput($date, $keyword);
         $countByType = $this->readEvent->countByType($searchInput);
 
-        $latest = $this->readEvent->getLatest($searchInput);
         $latest = array_map(static function ($item) {
-            $item['repo'] = json_decode($item['repo'], true);
+            $item['payload'] = json_decode($item['payload'], true);
 
             return $item;
-        }, $latest);
+        }, $this->readEvent->getLatest($searchInput));
 
         $stats = $this->readEvent->statsByTypePerHour($searchInput);
         $dataStats = array_fill(
@@ -38,7 +37,7 @@ class ReadEventRepository implements IReadEventRepository
         );
 
         foreach ($stats as $stat) {
-            $dataStats[(int) $stat['hour']][EventType::getChoice($stat['type'])] = $stat['count'];
+            $dataStats[$stat['hour']][EventType::getChoice($stat['type'])] = $stat['count'];
         }
 
         return [

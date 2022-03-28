@@ -18,22 +18,22 @@ class DbalReadEventRepository implements IReadEvent
     public function countAll(SearchInput $searchInput): int
     {
         $sql = <<<SQL
-        SELECT sum(count) as count
-        FROM event
-        WHERE TRUE
-SQL;
+            SELECT sum(count) as count
+            FROM event
+            WHERE TRUE
+        SQL;
         $params = [];
         if (!empty($searchInput->getDate())) {
             $sql .= <<<SQL
-            AND date(create_at) = :date
-SQL;
-            $params['date'] = $searchInput->getDate()->format("Y-m-d h:i:s");
+                AND date(create_at) = :date
+            SQL;
+            $params['date'] = $searchInput->getDate()->format("Y-m-d H:i:s");
         }
 
         if (!empty($searchInput->getKeyword())) {
             $sql .= <<<SQL
-            AND payload::text like :keyword
-SQL;
+                AND payload::text like :keyword
+            SQL;
             $params['keyword'] = "%{$searchInput->getKeyword()}%";
         }
 
@@ -46,25 +46,26 @@ SQL;
             SELECT type, sum(count) as count
             FROM event
             WHERE TRUE
-SQL;
+        SQL;
         $params = [];
         if (!empty($searchInput->getDate())) {
             $sql .= <<<SQL
-            AND date(create_at) = :date
-SQL;
-            $params['date'] = $searchInput->getDate()->format("Y-m-d h:i:s");
+                AND date(create_at) = :date
+            SQL;
+            $params['date'] = $searchInput->getDate()->format("Y-m-d H:i:s");
         }
 
         if (!empty($searchInput->getKeyword())) {
             $sql .= <<<SQL
-            AND payload::text like :keyword
-SQL;
+                AND payload::text like :keyword
+            SQL;
             $params['keyword'] = "%{$searchInput->getKeyword()}%";
         }
 
         $sql .= <<<SQL
             GROUP BY type
-SQL;
+        SQL;
+
         return $this->connection->fetchAllKeyValue($sql, $params);
     }
 
@@ -74,25 +75,25 @@ SQL;
             SELECT extract(hour from create_at) as hour, type, sum(count) as count
             FROM event
             WHERE TRUE
-SQL;
+        SQL;
         $params = [];
         if (!empty($searchInput->getDate())) {
             $sql .= <<<SQL
-            AND date(create_at) = :date
-SQL;
-            $params['date'] = $searchInput->getDate()->format("Y-m-d h:i:s");
+                AND date(create_at) = :date
+            SQL;
+            $params['date'] = $searchInput->getDate()->format("Y-m-d H:i:s");
         }
 
         if (!empty($searchInput->getKeyword())) {
             $sql .= <<<SQL
-            AND payload::text like :keyword
-SQL;
+                AND payload::text like :keyword
+            SQL;
             $params['keyword'] = "%{$searchInput->getKeyword()}%";
         }
 
         $sql .= <<<SQL
             GROUP BY TYPE, EXTRACT(hour from create_at)
-SQL;
+        SQL;
 
         return $this->connection->fetchAllAssociative($sql, $params);
     }
@@ -100,25 +101,29 @@ SQL;
     public function getLatest(SearchInput $searchInput): array
     {
         $sql = <<<SQL
-            SELECT type, repo_id as repo
+            SELECT type, payload
             FROM event
             WHERE TRUE
-SQL;
+        SQL;
         $params = [];
         if (!empty($searchInput->getDate())) {
             $sql .= <<<SQL
-            AND date(create_at) = :date
-SQL;
-            $params['date'] = $searchInput->getDate()->format("Y-m-d h:i:s");
+                AND date(create_at) = :date
+            SQL;
+            $params['date'] = $searchInput->getDate()->format("Y-m-d H:i:s");
         }
 
         if (!empty($searchInput->getKeyword())) {
             $sql .= <<<SQL
-            AND payload::text like :keyword
-SQL;
+                AND payload::text like :keyword
+            SQL;
             $params['keyword'] = "%{$searchInput->getKeyword()}%";
         }
 
+        $sql .= <<<SQL
+            ORDER BY create_at DESC
+            LIMIT 1
+        SQL;
         return $this->connection->fetchAllAssociative($sql, $params);
     }
 

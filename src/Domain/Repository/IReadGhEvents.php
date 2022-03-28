@@ -2,7 +2,9 @@
 
 namespace App\Domain\Repository;
 
+use Psr\Http\Message\StreamInterface;
+
 interface IReadGhEvents
 {
-    public function get(\DateTimeInterface $date): iterable;
+    public function getArchive(string $day, string $hour): StreamInterface;
 }

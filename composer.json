@@ -14,6 +14,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
         "fresh/doctrine-enum-bundle": "^7.4",
+        "guzzlehttp/guzzle": "^7.4",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.2",
         "symfony/console": "5.4.*",
@@ -79,7 +80,9 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "infection/infection": "^0.23.0",
+        "friends-of-behat/suite-settings-extension": "^1.1",
+        "friends-of-behat/symfony-extension": "^2.3",
+        "infection/infection": "^0.26",
         "liip/functional-test-bundle": "^4.0.0",
         "liip/test-fixtures-bundle": "^2.0.0",
         "mockery/mockery": "^1.4",
@@ -89,6 +92,7 @@
         "squizlabs/php_codesniffer": "^3.6",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",
-        "symfony/phpunit-bridge": "^6.0"
+        "symfony/phpunit-bridge": "^6.0",
+        "wiremock-php/wiremock-php": "^2.22"
     }
 }

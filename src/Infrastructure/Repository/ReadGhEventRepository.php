@@ -1,37 +1,26 @@
 <?php
-
 namespace App\Infrastructure\Repository;
 
 use App\Domain\Repository\IReadGhEvents;
-use JsonMachine\Items;
-use JsonMachine\JsonDecoder\ExtJsonDecoder;
+use GuzzleHttp\Client;
+use Psr\Http\Message\StreamInterface;
 
 class ReadGhEventRepository implements IReadGhEvents
 {
-    public function get(\DateTimeInterface $date): iterable
+    private string $ghArchiveUrl;
+
+    public function __construct(string $ghArchiveUrl)
     {
-        $day = $date->format('Y-m-d');
-        for ($hour = 0; $hour < 1; $hour++) {
-            $file = tempnam("/tmp", "gh-{$day}-{$hour}");
-            $temp = fopen($file, "r+");
-            $gz = gzopen("https://data.gharchive.org/{$day}-{$hour}.json.gz", 'rb');
-            fwrite($temp, '[');
-            while (!gzeof($gz)) {
-                fwrite($temp, gzread($gz, 500));
-            }
-            $fileSize = filesize($file);
-            if ($fileSize === 0) {
-                continue;
-            }
-            fwrite($temp, ']');
-            gzclose($gz);
-            rewind($temp);
-            $events = Items::fromFile($file, ['decoder' => new ExtJsonDecoder(true), 'debug' => true]);
-            foreach ($events as $key => $value) {
-                yield $value;
-            }
-            fclose($temp);
-            unlink($file);
-        }
+        $this->ghArchiveUrl = $ghArchiveUrl;
+    }
+    public function getArchive(string $day, string $hour): StreamInterface
+    {
+        $client = new Client();
+
+        $response = $client->request('GET', "{$this->ghArchiveUrl}/{$day}-{$hour}.json.gz", [
+            'stream' => true
+        ]);
+
+        return $response->getBody();
     }
 }

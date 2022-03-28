@@ -5,7 +5,6 @@ namespace App\Tests\Unit\Domain\Repository;
 use App\Domain\Dto\SearchInput;
 use App\Domain\Repository\IReadEvent;
 use App\Domain\Repository\ReadEventRepository;
-use App\Infrastructure\DataFixtures\EventFixtures;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -26,20 +25,25 @@ class ReadEventRepositoryTest extends TestCase
     public function testSearchEvent(bool $isViolation, ?string $date, ?string $keyword, string $expectedResponse)
     {
         $repository = new ReadEventRepository($this->readEvent);
-        $searchInput = Mockery::mock(SearchInput::class);
         $this->readEvent
             ->shouldReceive('countByType')
-            ->andReturn($isViolation ? [] : ["MSG" => 1]);
+            ->andReturn($isViolation ? [] : ["MSG" => 1, "COM" => 1, "PR" => 1]);
         $this->readEvent
             ->shouldReceive('getLatest')
-            ->andReturn($isViolation ? [] : [["type" => "MSG", "repo" => 1]]);
+            ->andReturn($isViolation ? [] : [
+                ["type" => "MSG", "payload" => '{"toto": "blbla"}'],
+            ]);
         $this->readEvent
             ->shouldReceive('statsByTypePerHour')
-            ->andreturn($isViolation ? [] : [["hour" => "0", "type" => "MSG", "count" => 1]]);
+            ->andreturn($isViolation ? [] : [
+                ["hour" => "0", "type" => "MSG", "count" => 1],
+                ["hour" => "1", "type" => "COM", "count" => 1],
+                ["hour" => "2", "type" => "PR", "count" => 1],
+            ]);
 
-        $this->readEvent->shouldReceive('countAll')->andreturn($isViolation ? 0 : 1);
+        $this->readEvent->shouldReceive('countAll')->andreturn($isViolation ? 0 : 3);
         $result = $repository->search(new \DateTimeImmutable($date), $keyword);
-        $this->assertJsonStringEqualsJsonString(json_encode($result),json_encode(json_decode($expectedResponse)));
+        $this->assertJsonStringEqualsJsonString(json_encode($result), $expectedResponse);
     }
 
     public function providePayload(): iterable
@@ -51,16 +55,16 @@ class ReadEventRepositoryTest extends TestCase
             <<<JSON
               {
                 "meta": {
-                    "totalEvents": 1,
-                    "totalPullRequests": 0,
-                    "totalCommits": 0,
+                    "totalEvents": 3,
+                    "totalPullRequests": 1,
+                    "totalCommits": 1,
                     "totalComments": 1
                 },
                 "data": {
                     "events": [
                         {
                             "type": "MSG",
-                            "repo": 1
+                            "payload": {"toto": "blbla"}
                         }
                     ],
                     "stats": [
@@ -70,13 +74,13 @@ class ReadEventRepositoryTest extends TestCase
                             "comment": 1
                         },
                         {
-                            "commit": 0,
+                            "commit": 1,
                             "pullRequest": 0,
                             "comment": 0
                         },
                         {
                             "commit": 0,
-                            "pullRequest": 0,
+                            "pullRequest": 1,
                             "comment": 0
                         },
                         {
@@ -197,16 +201,16 @@ class ReadEventRepositoryTest extends TestCase
             <<<JSON
               {
                 "meta": {
-                    "totalEvents": 1,
-                    "totalPullRequests": 0,
-                    "totalCommits": 0,
+                    "totalEvents": 3,
+                    "totalPullRequests": 1,
+                    "totalCommits": 1,
                     "totalComments": 1
                 },
                 "data": {
                     "events": [
                         {
                             "type": "MSG",
-                            "repo": 1
+                            "payload": {"toto": "blbla"}
                         }
                     ],
                     "stats": [
@@ -216,13 +220,13 @@ class ReadEventRepositoryTest extends TestCase
                             "comment": 1
                         },
                         {
-                            "commit": 0,
+                            "commit": 1,
                             "pullRequest": 0,
                             "comment": 0
                         },
                         {
                             "commit": 0,
-                            "pullRequest": 0,
+                            "pullRequest": 1,
                             "comment": 0
                         },
                         {

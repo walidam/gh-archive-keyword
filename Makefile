@@ -47,7 +47,7 @@ pull: ## Pulling docker images
 	@$(call log_success,Done)
 
 .PHONY: shell
-shell: start ## Enter in the PHP container
+shell: ## Enter in the PHP container
 	@$(call log,Entering inside php container ...)
 	@$(DOCKER_COMPOSE) exec php ash
 
@@ -112,13 +112,19 @@ func-test: var/docker.up ## Run PhpUnit functionnal testsuite
 	@$(call log_success,Done)
 
 .PHONY: phpcs
-phpcs: var/docker.up ## Run PhpCs analysis
+phpcs: ## Run PhpCs analysis
 	@$(call log,Running ...)
 	$(PHP_EXEC) vendor/bin/phpcs --extensions=php src/
 	@$(call log_success,Done)
 
 .PHONY: infection
-infection: var/docker.up ## Run infection analysis
+infection: ## Run infection analysis
 	@$(call log,Running ...)
 	$(PHP_EXEC) vendor/bin/infection -s --threads=4 --skip-initial-tests --verbose --debug --log-verbosity=none --coverage=reports/phpunit/coverage --min-covered-msi=50
 	@$(call log_success,Done)
+
+#launch wiremock
+.PHONY: mock
+mock: db-test ## run component test
+	@echo "\033[33mStarting mock ...\033[0m"
+	$(PHP_EXEC) sh -c "cd tests/Behat/Mock && php Mock.php"
